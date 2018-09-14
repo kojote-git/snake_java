@@ -15,22 +15,44 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class Snake extends BaseGameObject
 implements Movable, Eater {
 
+    /**
+     * direction of the snake
+     */
     private Direction direction;
 
+    /**
+     * speed of the snake
+     */
     private int speed;
 
+    /**
+     * size of snake body + 1 (head)
+     */
     private int size;
 
     private SnakePart head;
 
     private List<SnakePart> body;
 
+    /**
+     * size of body
+     */
+    private int bodySize;
+
+    /**
+     * Create new snake with head that resides in {@code head} cell
+     * and specify direction for it
+     * @param head
+     * @param direction
+     */
     public Snake(FieldCell head, Direction direction) {
         this.body = new ArrayList<>();
         this.head = new SnakePart(head);
         this.direction = direction;
+        this.appendTail();
         this.speed = 1;
         this.size = body.size() + 1;
+        this.bodySize = body.size();
     }
 
     @Override
@@ -78,7 +100,21 @@ implements Movable, Eater {
         return Collections.unmodifiableList(body);
     }
 
-    public void move(int x, int y) {
+    public SnakePart getHead() {
+        return this.head;
+    }
+
+    public SnakePart getTail() {
+        return bodySize == 0 ? head :this.body.get(bodySize - 1);
+    }
+
+    /**
+     * Moves snake head into intersection of {@code x}-th column and {@code y}-th row.
+     * Then moves its body
+     * @param x
+     * @param y
+     */
+    private void move(int x, int y) {
         FieldCell prevPos = head.getPosition();
         FieldCell newHeadPosition = new FieldCell(
             prevPos.getX() + x,
@@ -103,36 +139,57 @@ implements Movable, Eater {
     }
 
     public void grow() {
-        size++;
         appendTail();
     }
+
+    /**
+     * @return size of the snake body + head
+     */
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * Appends new tail after snake's previous tail.
+     * Position of the tail depends on snake's direction
+     */
     private void appendTail() {
         SnakePart tail;
-        if (body.size() == 0)
+        if (bodySize == 0)
             tail = head;
         else
-            tail = body.get(size - 2);
+            tail = body.get(bodySize - 1);
         FieldCell fc = tail.getPosition();
         switch (direction) {
             case UP:
-                appendPart(fc.getX(), fc.getY() - 1);
+                appendPart(fc.getX(), fc.getY() + 1);
                 break;
             case DOWN:
-                appendPart(fc.getX(), fc.getY() + 1);
+                appendPart(fc.getX(), fc.getY() - 1);
                 break;
             case LEFT:
                 appendPart(fc.getX() + 1, fc.getY());
                 break;
             case RIGHT:
-                appendPart(fc.getX() - 1, fc.getX());
+                appendPart(fc.getX() - 1, fc.getY());
                 break;
         }
     }
 
+    /**
+     * Appends part that resides in intersection of {@code x}-th column and {@code y}-th row
+     * @param x
+     * @param y
+     */
     private void appendPart(int x, int y) {
+        size++;
+        bodySize++;
         body.add(new SnakePart(new FieldCell(x, y)));
     }
 
+    /**
+     * Represents a part of snake's body or its head
+     */
     public static class SnakePart {
 
         private FieldCell cell;

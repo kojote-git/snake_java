@@ -7,11 +7,14 @@ import com.jkojote.snakegame.game.obj.envets.GameEventListener;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Base class for some classes that allow event sourcing
+ */
 public abstract class BaseGameObject implements GameObject {
 
     private List<GameEventListener> eventListeners;
 
-    public BaseGameObject() {
+    protected BaseGameObject() {
         eventListeners = new LinkedList<>();
     }
 

@@ -10,7 +10,8 @@ import java.util.List;
 import static com.jkojote.snakegame.game.obj.Effect.*;
 
 /**
- * An apple takes one cell on game field
+ * An apple takes one cell on game field.
+ * When snake eats apple, snake grows new tail
  */
 public class Apple implements Eatable {
 

@@ -50,6 +50,7 @@ implements Movable, Eater {
         this.head = new SnakePart(head);
         this.direction = direction;
         this.appendTail();
+        this.appendTail();
         this.speed = 1;
         this.size = body.size() + 1;
         this.bodySize = body.size();
@@ -122,13 +123,14 @@ implements Movable, Eater {
         );
         this.head.setPosition(newHeadPosition);
         for (SnakePart part : body) {
-            prevPos = part.getPosition();
+            FieldCell temp = part.getPosition();
             part.setPosition(
                 new FieldCell(
-                    prevPos.getX() + x,
-                    prevPos.getY() + y
+                    prevPos.getX(),
+                    prevPos.getY()
                 )
             );
+            prevPos = temp;
         }
     }
 

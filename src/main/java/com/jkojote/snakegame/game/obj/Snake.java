@@ -49,8 +49,8 @@ implements Movable, Eater {
         this.body = new ArrayList<>();
         this.head = new SnakePart(head);
         this.direction = direction;
-        this.appendTail();
-        this.appendTail();
+        for (int i = 5; i >= 0; i--)
+            this.appendTail();
         this.speed = 1;
         this.size = body.size() + 1;
         this.bodySize = body.size();
@@ -80,10 +80,36 @@ implements Movable, Eater {
     }
 
     @Override
-    public void changeDirection(Direction direction) {
+    public boolean changeDirection(Direction direction) {
         if (direction == null)
             throw new NullPointerException("direction cannot be null");
-        this.direction = direction;
+        // direction can be changed if snake doesn't have body yet or
+        // if it changes direction, next cell into which snake's move
+        // won't be its body part that precedes head
+        if (bodySize == 0) {
+            this.direction = direction;
+            return true;
+        }
+        if (!headNextPosition(direction).equals(body.get(0).getPosition())) {
+            this.direction = direction;
+            return true;
+        }
+        return false;
+    }
+
+    private FieldCell headNextPosition(Direction direction) {
+        FieldCell head = getHead().getPosition();
+        switch (direction) {
+            case RIGHT:
+                return new FieldCell(head.getX() + speed, head.getY());
+            case UP:
+                return new FieldCell(head.getX(), head.getY() - speed);
+            case DOWN:
+                return new FieldCell(head.getX(), head.getY() + speed);
+            case LEFT:
+                return new FieldCell(head.getX() - speed, head.getY());
+        }
+        return head;
     }
 
     @Override

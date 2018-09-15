@@ -5,7 +5,7 @@ public interface Movable extends GameObject {
 
     Direction getDirection();
 
-    void changeDirection(Direction direction);
+    boolean changeDirection(Direction direction);
 
     int getSpeed();
 

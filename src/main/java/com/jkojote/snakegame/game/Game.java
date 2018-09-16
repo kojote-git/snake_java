@@ -3,6 +3,7 @@ package com.jkojote.snakegame.game;
 import com.jkojote.snakegame.game.input.SnakeControlKeysListener;
 import com.jkojote.snakegame.game.obj.FieldCell;
 import com.jkojote.snakegame.game.obj.Snake;
+import com.jkojote.snakegame.game.obj.SnakeAteItselfException;
 import com.jkojote.snakegame.game.obj.base.Direction;
 import com.jkojote.snakegame.game.rendering.Renderers;
 import com.jkojote.snakegame.game.rendering.SnakeRenderer;
@@ -25,7 +26,7 @@ public class Game implements Runnable {
     private SnakeRenderer snakeRenderer;
 
     public Game() {
-        this.snake = new Snake(new FieldCell(4, 4), Direction.RIGHT);
+        this.snake = new Snake(new FieldCell(4, 4), Direction.RIGHT, 16);
         this.snakeRenderer = (SnakeRenderer) Renderers.getRendererFor(Snake.class);
         this.window = new Window(
             "snake",
@@ -44,10 +45,15 @@ public class Game implements Runnable {
         window.render();
         while (true) {
             try {
+                try {
+                    snake.move();
+                } catch (SnakeAteItselfException saie) {
+                    // snake grows when it eats itself)
+                    snake.grow();
+                }
                 window.render();
-                snake.move();
                 checkCollisions();
-                Thread.sleep(30);
+                Thread.sleep(60);
             } catch (Exception e) { }
         }
     }
@@ -55,21 +61,21 @@ public class Game implements Runnable {
     private void checkCollisions() {
         SnakePart head = snake.getHead();
         FieldCell headPosition = head.getPosition();
-//        if (headPosition.getX() > gameFieldWidth) {
-//            snake.teleport(new FieldCell(0, headPosition.getY()));
-//            return;
-//        }
-//        if (headPosition.getX() < 0) {
-//            snake.teleport(new FieldCell(gameFieldWidth, headPosition.getY()));
-//            return;
-//        }
-//        if (headPosition.getY() >= gameFieldHeight) {
-//            snake.teleport(new FieldCell(headPosition.getX(), 0));
-//            return;
-//        }
-//        if (headPosition.getY() < 0) {
-//            snake.teleport(new FieldCell(headPosition.getX(), gameFieldHeight));
-//            return;
-//        }
+        if (headPosition.getX() > gameFieldWidth) {
+            snake.teleport(new FieldCell(0, headPosition.getY()));
+            return;
+        }
+        if (headPosition.getX() < 0) {
+            snake.teleport(new FieldCell(gameFieldWidth, headPosition.getY()));
+            return;
+        }
+        if (headPosition.getY() >= gameFieldHeight) {
+            snake.teleport(new FieldCell(headPosition.getX(), 0));
+            return;
+        }
+        if (headPosition.getY() < 0) {
+            snake.teleport(new FieldCell(headPosition.getX(), gameFieldHeight));
+            return;
+        }
     }
 }

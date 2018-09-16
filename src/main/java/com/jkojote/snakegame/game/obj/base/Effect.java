@@ -1,4 +1,4 @@
-package com.jkojote.snakegame.game.obj;
+package com.jkojote.snakegame.game.obj.base;
 
 public enum Effect {
     SNAKE_GROW("SNAKE_GROW");

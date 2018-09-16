@@ -46,10 +46,14 @@ implements Movable, Eater {
      * @param direction
      */
     public Snake(FieldCell head, Direction direction) {
+        this(head, direction, 3);
+    }
+
+    public Snake(FieldCell head, Direction direction, int size) {
         this.body = new ArrayList<>();
         this.head = new SnakePart(head);
         this.direction = direction;
-        for (int i = 5; i >= 0; i--)
+        for (int i = 0; i < size; i++)
             this.appendTail();
         this.speed = 1;
         this.size = body.size() + 1;
@@ -58,18 +62,19 @@ implements Movable, Eater {
 
     @Override
     public void move() {
+        FieldCell fc = head.getPosition();
         switch (direction) {
             case UP:
-                move(0, -speed);
+                move(fc.getX(), fc.getY() - speed);
                 break;
             case DOWN:
-                move(0, speed);
+                move(fc.getX(), fc.getY() + speed);
                 break;
             case LEFT:
-                move(-speed, 0);
+                move(fc.getX() - speed, fc.getY());
                 break;
             case RIGHT:
-                move(speed, 0);
+                move(fc.getX() + speed, fc.getY());
                 break;
         }
     }
@@ -117,10 +122,13 @@ implements Movable, Eater {
         return speed;
     }
 
+    /**
+     * Do nothing
+     * @param newSpeed
+     */
     @Override
     public void changeSpeed(int newSpeed) {
-        checkArgument(newSpeed > 0, "speed must be positive integer");
-        this.speed = newSpeed;
+
     }
 
     public List<SnakePart> getBody() {
@@ -136,20 +144,24 @@ implements Movable, Eater {
     }
 
     /**
-     * Moves snake head into intersection of {@code x}-th column and {@code y}-th row.
-     * Then moves its body
+     * Moves snake's head into cell with coordinates ({@code x}, {@code y}).
+     * Then moves its body after head
      * @param x
      * @param y
+     * @throws SnakeAteItselfException if, while moving, head collides with some part of snake's body
      */
     private void move(int x, int y) {
         FieldCell prevPos = head.getPosition();
         FieldCell newHeadPosition = new FieldCell(
-            prevPos.getX() + x,
-            prevPos.getY() + y
+            x,
+            y
         );
         this.head.setPosition(newHeadPosition);
         for (SnakePart part : body) {
             FieldCell temp = part.getPosition();
+            // head collides with moving part of the body
+            if (newHeadPosition.equals(prevPos))
+                throw new SnakeAteItselfException();
             part.setPosition(
                 new FieldCell(
                     prevPos.getX(),
@@ -164,6 +176,14 @@ implements Movable, Eater {
     public void eat(Eatable eatable) {
         eatable.affect(this);
         notifyAllListeners(new SnakeAte(this, eatable));
+    }
+
+    /**
+     * Performs teleportation of the snake's head into the {@code cell}
+     * @param cell
+     */
+    public void teleport(FieldCell cell) {
+        move(cell.getX(), cell.getY());
     }
 
     public void grow() {

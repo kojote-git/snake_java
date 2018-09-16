@@ -2,12 +2,13 @@ package com.jkojote.snakegame.game.obj;
 
 import com.jkojote.snakegame.game.obj.base.Eatable;
 import com.jkojote.snakegame.game.obj.base.Eater;
+import com.jkojote.snakegame.game.obj.base.Effect;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.jkojote.snakegame.game.obj.Effect.*;
+import static com.jkojote.snakegame.game.obj.base.Effect.*;
 
 /**
  * An apple takes one cell on game field.

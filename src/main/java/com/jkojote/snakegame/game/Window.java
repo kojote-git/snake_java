@@ -30,17 +30,4 @@ public class Window extends Canvas {
         jFrame.setVisible(true);
         jFrame.pack();
     }
-
-    public void render() {
-        BufferStrategy bs = getBufferStrategy();
-        if (bs == null) {
-            createBufferStrategy(3);
-            return;
-        }
-        Graphics g = bs.getDrawGraphics();
-        g.clearRect(0, 0, width, height);
-        game.render(g);
-        g.dispose();
-        bs.show();
-    }
 }

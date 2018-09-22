@@ -2,7 +2,6 @@ package com.jkojote.snakegame.game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferStrategy;
 
 public class Window extends Canvas {
 

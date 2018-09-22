@@ -24,11 +24,11 @@ public class Apple implements Eatable {
 
     private FieldCell fieldCell;
 
-    public Apple(FieldCell fieldCell) {
-        this.fieldCell = fieldCell;
+    public Apple(FieldCell position) {
+        this.fieldCell = position;
     }
 
-    public FieldCell getFieldCell() {
+    public FieldCell getPosition() {
         return fieldCell;
     }
 

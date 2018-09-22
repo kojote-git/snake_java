@@ -10,7 +10,7 @@ public class AppleRenderer implements GameObjectRenderer<Apple> {
 
     @Override
     public void render(Graphics g, Apple apple) {
-        FieldCell fc = apple.getFieldCell();
+        FieldCell fc = apple.getPosition();
         g.setColor(Color.GREEN);
         g.drawRect(
             fc.getX() * CELL_WIDTH_PIXELS,

@@ -12,7 +12,7 @@ public class AppleRenderer implements GameObjectRenderer<Apple> {
     public void render(Graphics g, Apple apple) {
         Cell fc = apple.getPosition();
         g.setColor(Color.GREEN);
-        g.drawRect(
+        g.fillRect(
             fc.getX() * CELL_WIDTH_PIXELS,
             fc.getY() * CELL_WIDTH_PIXELS,
             CELL_WIDTH_PIXELS, CELL_WIDTH_PIXELS

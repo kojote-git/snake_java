@@ -1,5 +1,6 @@
 package com.jkojote.snakegame.game.obj;
 
+import com.jkojote.snakegame.game.obj.base.BoundingCollisionBox;
 import com.jkojote.snakegame.game.obj.base.Eatable;
 import com.jkojote.snakegame.game.obj.base.Eater;
 import com.jkojote.snakegame.game.obj.base.Effect;
@@ -11,7 +12,7 @@ import java.util.List;
 import static com.jkojote.snakegame.game.obj.base.Effect.*;
 
 /**
- * An apple takes one cell on game field.
+ * An apple takes one position on game field.
  * When snake eats apple, snake grows new tail
  */
 public class Apple implements Eatable {
@@ -22,14 +23,17 @@ public class Apple implements Eatable {
         effects = Arrays.asList(SNAKE_GROW);
     }
 
-    private Cell cell;
+    private Cell position;
+
+    private BoundingCollisionBox collisionBox;
 
     public Apple(Cell position) {
-        this.cell = position;
+        this.position = position;
+        this.collisionBox = new BoundingCollisionBox(position, 1, 1);
     }
 
     public Cell getPosition() {
-        return cell;
+        return position;
     }
 
     @Override
@@ -42,5 +46,10 @@ public class Apple implements Eatable {
         if (!(eater instanceof Snake)) return;
         Snake snake = (Snake) eater;
         snake.grow();
+    }
+
+    @Override
+    public BoundingCollisionBox collisionBox() {
+        return collisionBox;
     }
 }

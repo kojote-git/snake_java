@@ -1,9 +1,6 @@
 package com.jkojote.snakegame.game.obj;
 
-import com.jkojote.snakegame.game.obj.base.Direction;
-import com.jkojote.snakegame.game.obj.base.Eatable;
-import com.jkojote.snakegame.game.obj.base.Eater;
-import com.jkojote.snakegame.game.obj.base.Movable;
+import com.jkojote.snakegame.game.obj.base.*;
 import com.jkojote.snakegame.game.obj.envets.SnakeAte;
 
 import java.util.ArrayList;
@@ -30,6 +27,8 @@ implements Movable, Eater {
 
     private SnakePart head;
 
+    private BoundingCollisionBox collisionBox;
+
     private List<SnakePart> body;
 
     /**
@@ -55,6 +54,7 @@ implements Movable, Eater {
             this.appendTail();
         this.speed = 1;
         this.size = body.size() + 1;
+        this.collisionBox = new BoundingCollisionBox(head, 1, 1);
         this.bodySize = body.size();
     }
 
@@ -154,6 +154,7 @@ implements Movable, Eater {
             x,
             y
         );
+        collisionBox.moveTo(newHeadPosition);
         this.head.setPosition(newHeadPosition);
         for (SnakePart part : body) {
             Cell temp = part.getPosition();
@@ -231,6 +232,11 @@ implements Movable, Eater {
         size++;
         bodySize++;
         body.add(new SnakePart(new Cell(x, y)));
+    }
+
+    @Override
+    public BoundingCollisionBox collisionBox() {
+        return collisionBox;
     }
 
     /**

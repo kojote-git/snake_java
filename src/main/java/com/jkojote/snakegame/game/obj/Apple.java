@@ -22,14 +22,14 @@ public class Apple implements Eatable {
         effects = Arrays.asList(SNAKE_GROW);
     }
 
-    private FieldCell fieldCell;
+    private Cell cell;
 
-    public Apple(FieldCell position) {
-        this.fieldCell = position;
+    public Apple(Cell position) {
+        this.cell = position;
     }
 
-    public FieldCell getPosition() {
-        return fieldCell;
+    public Cell getPosition() {
+        return cell;
     }
 
     @Override

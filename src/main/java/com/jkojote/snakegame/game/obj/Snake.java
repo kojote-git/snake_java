@@ -43,11 +43,11 @@ implements Movable, Eater {
      * @param head
      * @param direction
      */
-    public Snake(FieldCell head, Direction direction) {
+    public Snake(Cell head, Direction direction) {
         this(head, direction, 3);
     }
 
-    public Snake(FieldCell head, Direction direction, int size) {
+    public Snake(Cell head, Direction direction, int size) {
         this.body = new ArrayList<>();
         this.head = new SnakePart(head);
         this.direction = direction;
@@ -60,7 +60,7 @@ implements Movable, Eater {
 
     @Override
     public void move() {
-        FieldCell fc = head.getPosition();
+        Cell fc = head.getPosition();
         switch (direction) {
             case UP:
                 move(fc.getX(), fc.getY() - speed);
@@ -100,17 +100,17 @@ implements Movable, Eater {
         return false;
     }
 
-    private FieldCell headNextPosition(Direction direction) {
-        FieldCell head = getHead().getPosition();
+    private Cell headNextPosition(Direction direction) {
+        Cell head = getHead().getPosition();
         switch (direction) {
             case RIGHT:
-                return new FieldCell(head.getX() + speed, head.getY());
+                return new Cell(head.getX() + speed, head.getY());
             case UP:
-                return new FieldCell(head.getX(), head.getY() - speed);
+                return new Cell(head.getX(), head.getY() - speed);
             case DOWN:
-                return new FieldCell(head.getX(), head.getY() + speed);
+                return new Cell(head.getX(), head.getY() + speed);
             case LEFT:
-                return new FieldCell(head.getX() - speed, head.getY());
+                return new Cell(head.getX() - speed, head.getY());
         }
         return head;
     }
@@ -149,19 +149,19 @@ implements Movable, Eater {
      * @throws SnakeAteItselfException if, while moving, head collides with some part of snake's body
      */
     private void move(int x, int y) {
-        FieldCell prevPos = head.getPosition();
-        FieldCell newHeadPosition = new FieldCell(
+        Cell prevPos = head.getPosition();
+        Cell newHeadPosition = new Cell(
             x,
             y
         );
         this.head.setPosition(newHeadPosition);
         for (SnakePart part : body) {
-            FieldCell temp = part.getPosition();
+            Cell temp = part.getPosition();
             // head collides with moving part of the body
             if (newHeadPosition.equals(prevPos))
                 throw new SnakeAteItselfException();
             part.setPosition(
-                new FieldCell(
+                new Cell(
                     prevPos.getX(),
                     prevPos.getY()
                 )
@@ -180,7 +180,7 @@ implements Movable, Eater {
      * Performs teleportation of the snake's head into the {@code cell}
      * @param cell
      */
-    public void teleport(FieldCell cell) {
+    public void teleport(Cell cell) {
         move(cell.getX(), cell.getY());
     }
 
@@ -205,7 +205,7 @@ implements Movable, Eater {
             tail = head;
         else
             tail = body.get(bodySize - 1);
-        FieldCell fc = tail.getPosition();
+        Cell fc = tail.getPosition();
         switch (direction) {
             case UP:
                 appendPart(fc.getX(), fc.getY() + 1);
@@ -230,7 +230,7 @@ implements Movable, Eater {
     private void appendPart(int x, int y) {
         size++;
         bodySize++;
-        body.add(new SnakePart(new FieldCell(x, y)));
+        body.add(new SnakePart(new Cell(x, y)));
     }
 
     /**
@@ -238,17 +238,17 @@ implements Movable, Eater {
      */
     public static class SnakePart {
 
-        private FieldCell cell;
+        private Cell cell;
 
-        SnakePart(FieldCell cell) {
+        SnakePart(Cell cell) {
             this.cell = cell;
         }
 
-        private void setPosition(FieldCell fc) {
+        private void setPosition(Cell fc) {
             this.cell = fc;
         }
 
-        public FieldCell getPosition() {
+        public Cell getPosition() {
             return cell;
         }
     }

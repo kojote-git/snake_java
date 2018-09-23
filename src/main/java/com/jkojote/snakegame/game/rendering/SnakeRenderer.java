@@ -1,6 +1,6 @@
 package com.jkojote.snakegame.game.rendering;
 
-import com.jkojote.snakegame.game.obj.FieldCell;
+import com.jkojote.snakegame.game.obj.Cell;
 import com.jkojote.snakegame.game.obj.Snake;
 
 import java.awt.*;
@@ -12,7 +12,7 @@ public class SnakeRenderer implements GameObjectRenderer<Snake> {
 
     @Override
     public void render(Graphics g, Snake snake) {
-        FieldCell bodyPart = snake.getHead().getPosition();
+        Cell bodyPart = snake.getHead().getPosition();
         g.setColor(Color.RED);
         g.fillRect(
             bodyPart.getX() * CELL_WIDTH_PIXELS,

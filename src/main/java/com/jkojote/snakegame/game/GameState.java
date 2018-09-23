@@ -2,7 +2,7 @@ package com.jkojote.snakegame.game;
 
 import com.jkojote.snakegame.Border;
 import com.jkojote.snakegame.BorderCollisionStrategy;
-import com.jkojote.snakegame.game.obj.FieldCell;
+import com.jkojote.snakegame.game.obj.Cell;
 import com.jkojote.snakegame.game.obj.Snake;
 import com.jkojote.snakegame.game.obj.base.GameObject;
 
@@ -21,7 +21,7 @@ public class GameState {
     private BorderCollisionStrategy borderCollisionStrategy;
 
     private void checkCollisions() {
-        FieldCell head = snake.getHead().getPosition();
+        Cell head = snake.getHead().getPosition();
         checkBorderCollisions(head);
         // Checks collision with other game objects
         /*
@@ -31,7 +31,7 @@ public class GameState {
         */
     }
 
-    private void checkBorderCollisions(FieldCell head) {
+    private void checkBorderCollisions(Cell head) {
         if (head.getX() > gameFieldWidth)
             borderCollisionStrategy.performAction(snake, Border.RIGHT);
         if (head.getX() < 0)

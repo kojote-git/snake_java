@@ -10,13 +10,13 @@ import java.util.Objects;
  * <b>y</b> - number of the row in which the cell resides
  * intersection x-th column and y-th row is the actual position of the cell
  */
-public class FieldCell {
+public class Cell {
 
     private int x;
 
     private int y;
 
-    public FieldCell(int x, int y) {
+    public Cell(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -24,8 +24,8 @@ public class FieldCell {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof FieldCell) {
-            FieldCell that = (FieldCell) o;
+        if (o instanceof Cell) {
+            Cell that = (Cell) o;
             return x == that.x &&
                    y == that.y;
         }
@@ -47,6 +47,6 @@ public class FieldCell {
 
     @Override
     public String toString() {
-        return "FieldCell: { x: " + x + ", y: " + y + "}";
+        return "Cell: { x: " + x + ", y: " + y + "}";
     }
 }

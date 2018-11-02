@@ -6,6 +6,7 @@ import com.jkojote.snakegame.game.borders.EndGameBorderCollisionStrategy;
 import com.jkojote.snakegame.game.borders.TeleportBorderCollisionStrategy;
 import com.jkojote.snakegame.game.obj.Apple;
 import com.jkojote.snakegame.game.obj.Cell;
+import com.jkojote.snakegame.game.obj.Portal;
 import com.jkojote.snakegame.game.obj.Snake;
 import com.jkojote.snakegame.game.obj.base.BoundingCollisionBox;
 import com.jkojote.snakegame.game.obj.base.Direction;
@@ -26,6 +27,8 @@ public class GameState implements GameEventListener {
     public static final int MIN_GAME_FIELD_WIDTH = 20;
 
     public static final int MIN_GAME_FIELD_HEIGHT = 20;
+
+    private int maxPortalsCount;
 
     private Snake snake;
 
@@ -50,14 +53,16 @@ public class GameState implements GameEventListener {
     private void checkCollisions() {
         Cell head = snake.getHead().getPosition();
         checkBorderCollisions(head);
-        BoundingCollisionBox snakeCB = snake.collisionBox();
+        BoundingCollisionBox snakeCB = snake.collisionBoxes().get(0);
         for (int i = 1; i < gameObjects.size(); i++) {
             GameObject go = gameObjects.get(i);
-            if (snakeCB.checkCollides(go.collisionBox())) {
-                if (go instanceof Eatable) {
-                    snake.eat((Eatable) go);
+            for (int j = 0; j < go.collisionBoxes().size(); j++)
+                if (snakeCB.checkCollides(go.collisionBoxes().get(j))) {
+                    if (go instanceof Eatable) {
+                        snake.eat((Eatable) go);
+                    }
+                    break;
                 }
-            }
         }
     }
 
@@ -74,6 +79,7 @@ public class GameState implements GameEventListener {
 
     public void update() {
         updateApple();
+        updatePortal();
         checkCollisions();
         snake.move();
     }
@@ -84,9 +90,7 @@ public class GameState implements GameEventListener {
             boolean collided = true;
             while (collided) {
                 collided = false;
-                int x = (Math.abs(random.nextInt()) % (gameFieldWidth - 2)) + 1;
-                int y = (Math.abs(random.nextInt()) % (gameFieldHeight - 2)) + 1;
-                applePosition = new Cell(x, y);
+                applePosition = new Cell(getRandomX(), getRandomY());
                 if (applePosition.equals(snake.getHead().getPosition())) {
                     collided = true;
                     continue;
@@ -101,6 +105,57 @@ public class GameState implements GameEventListener {
             Apple apple = new Apple(applePosition);
             gameObjects.add(apple);
         }
+    }
+
+    private void updatePortal() {
+        if (!hasPortal()) {
+            int chance = random.nextInt();
+            if (chance % 257 != 0)
+                return;
+            Cell enter = null, exit = null;
+            boolean collided = true;
+            while (collided) {
+                collided = false;
+                enter = new Cell(getRandomX(), getRandomY());
+                exit = new Cell(getRandomX(), getRandomY());
+                if (enter.equals(snake.getHead().getPosition()) ||
+                    exit.equals(snake.getHead().getPosition())) {
+                    collided = true;
+                    continue;
+                }
+                for (SnakePart sp : snake.getBody()) {
+                    if (enter.equals(sp.getPosition()) || enter.equals(sp.getPosition())) {
+                        collided = true;
+                        continue;
+                    }
+                }
+            }
+            Portal p = new Portal(enter, exit);
+            gameObjects.add(p);
+        }
+    }
+
+    private int getRandomX() {
+        return Math.abs(random.nextInt()) % (gameFieldWidth - 2) + 1;
+    }
+
+    private int getRandomY() {
+        return Math.abs(random.nextInt()) % (gameFieldHeight - 2) + 1;
+    }
+
+    private boolean hasPortal() {
+        if (this.maxPortalsCount == 0)
+            return true;
+        int count = 0;
+        for (GameObject go : gameObjects) {
+            if (go instanceof Portal) {
+                ++count;
+                if (count == maxPortalsCount) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean hasApple() {
@@ -147,6 +202,8 @@ public class GameState implements GameEventListener {
 
         private int gameFieldHeight = 20;
 
+        private int portalsCount = 1;
+
         private BorderCollisionStrategy borderCollisionStrategy;
 
         private GameStateBuilder() {
@@ -181,6 +238,13 @@ public class GameState implements GameEventListener {
             return this;
         }
 
+        public GameStateBuilder withMaxPortalsCount(int portals) {
+            if (portals < 0)
+                throw new IllegalArgumentException("portals must be positive integer");
+            this.portalsCount = portals;
+            return this;
+        }
+
         public GameState build() {
             GameState gameState = new GameState();
             if (this.snake == null) {
@@ -196,6 +260,7 @@ public class GameState implements GameEventListener {
             gameState.borderCollisionStrategy = this.borderCollisionStrategy;
             gameState.gameObjects             = new ArrayList<>();
             gameState.gameObjects.add(this.snake);
+            gameState.maxPortalsCount = portalsCount;
             return gameState;
         }
     }

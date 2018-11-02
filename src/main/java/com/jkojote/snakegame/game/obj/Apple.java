@@ -5,6 +5,7 @@ import com.jkojote.snakegame.game.obj.base.Eatable;
 import com.jkojote.snakegame.game.obj.base.Eater;
 import com.jkojote.snakegame.game.obj.base.Effect;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -25,11 +26,12 @@ public class Apple implements Eatable {
 
     private Cell position;
 
-    private BoundingCollisionBox collisionBox;
+    private List<BoundingCollisionBox> collisionBoxes;
 
     public Apple(Cell position) {
         this.position = position;
-        this.collisionBox = new BoundingCollisionBox(position, 1, 1);
+        this.collisionBoxes = new ArrayList<>();
+        this.collisionBoxes.add(new BoundingCollisionBox(position, 1, 1));
     }
 
     public Cell getPosition() {
@@ -49,7 +51,7 @@ public class Apple implements Eatable {
     }
 
     @Override
-    public BoundingCollisionBox collisionBox() {
-        return collisionBox;
+    public List<BoundingCollisionBox> collisionBoxes() {
+        return collisionBoxes;
     }
 }

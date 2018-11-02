@@ -24,10 +24,10 @@ public class BoundingCollisionBox {
 
     public boolean checkCollides(BoundingCollisionBox cb) {
         final Cell cbTopLeft = cb.topLeft;
-        if ((topLeft.getX() <= cbTopLeft.getX() + cb.width) &&
-                (topLeft.getX() + width >= cbTopLeft.getX()) &&
-                (topLeft.getY() <= cbTopLeft.getY() + cb.height) &&
-                (topLeft.getY() + height >= cbTopLeft.getY())) {
+        if ((topLeft.getX() <= cbTopLeft.getX() + cb.width - 1) &&
+                (topLeft.getX() + width -1 >= cbTopLeft.getX()) &&
+                (topLeft.getY() <= cbTopLeft.getY() + cb.height - 1) &&
+                (topLeft.getY() + height -1 >= cbTopLeft.getY())) {
             return true;
         }
         return false;

@@ -1,6 +1,7 @@
 package com.jkojote.snakegame.game.rendering;
 
 import com.jkojote.snakegame.game.obj.Apple;
+import com.jkojote.snakegame.game.obj.Portal;
 import com.jkojote.snakegame.game.obj.Snake;
 import com.jkojote.snakegame.game.obj.base.GameObject;
 
@@ -15,18 +16,24 @@ public class Renderers {
 
     private static final SnakeRenderer SNAKE_RENDERER;
 
+    private static final PortalRenderer PORTAL_RENDERER;
+
     static {
         APPLE_RENDERER = new AppleRenderer();
         SNAKE_RENDERER = new SnakeRenderer();
+        PORTAL_RENDERER = new PortalRenderer();
     }
 
     @SuppressWarnings("unchecked")
-    public static  <T extends GameObject> GameObjectRenderer<T> getRendererFor(Class<T> clazz) {
+    public static <T extends GameObject> GameObjectRenderer<T> getRendererFor(Class<T> clazz) {
        if (clazz == Apple.class) {
            return (GameObjectRenderer<T>) APPLE_RENDERER;
        }
        if (clazz == Snake.class) {
            return (GameObjectRenderer<T>) SNAKE_RENDERER;
+       }
+       if (clazz == Portal.class) {
+           return (GameObjectRenderer<T>) PORTAL_RENDERER;
        }
        return null;
     }

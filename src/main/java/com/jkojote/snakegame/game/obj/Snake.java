@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Snake extends BaseGameObject
-implements Movable, Eater {
+implements Movable, Eater, Teleportable {
 
     /**
      * direction of the snake
@@ -27,7 +27,7 @@ implements Movable, Eater {
 
     private SnakePart head;
 
-    private BoundingCollisionBox collisionBox;
+    private List<BoundingCollisionBox> collisionBoxes;
 
     private List<SnakePart> body;
 
@@ -54,7 +54,8 @@ implements Movable, Eater {
             this.appendTail();
         this.speed = 1;
         this.size = body.size() + 1;
-        this.collisionBox = new BoundingCollisionBox(head, 1, 1);
+        this.collisionBoxes = new ArrayList<>();
+        collisionBoxes.add(new BoundingCollisionBox(head, 1, 1));
         this.bodySize = body.size();
     }
 
@@ -150,11 +151,8 @@ implements Movable, Eater {
      */
     private void move(int x, int y) {
         Cell prevPos = head.getPosition();
-        Cell newHeadPosition = new Cell(
-            x,
-            y
-        );
-        collisionBox.moveTo(newHeadPosition);
+        Cell newHeadPosition = new Cell(x, y);
+        collisionBoxes.get(0).moveTo(newHeadPosition);
         this.head.setPosition(newHeadPosition);
         for (SnakePart part : body) {
             Cell temp = part.getPosition();
@@ -177,12 +175,14 @@ implements Movable, Eater {
         notifyAllListeners(new SnakeAte(this, eatable));
     }
 
+
     /**
      * Performs teleportation of the snake's head into the {@code cell}
-     * @param cell
+     * @param dest
      */
-    public void teleport(Cell cell) {
-        move(cell.getX(), cell.getY());
+    @Override
+    public void teleport(Cell dest) {
+        move(dest.getX(), dest.getY());
     }
 
     public void grow() {
@@ -235,8 +235,8 @@ implements Movable, Eater {
     }
 
     @Override
-    public BoundingCollisionBox collisionBox() {
-        return collisionBox;
+    public List<BoundingCollisionBox> collisionBoxes() {
+        return Collections.unmodifiableList(collisionBoxes);
     }
 
     /**

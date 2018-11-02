@@ -78,6 +78,9 @@ public class BoundingCollisionBoxTest {
         moveAndCheckNotCollide(8, 3);
         moveAndCheckNotCollide(8, 4);
         moveAndCheckNotCollide(8, 5);
+
+        cb1 = new BoundingCollisionBox(new Cell(5, 5), 2, 2);
+        cb2 = new BoundingCollisionBox(new Cell(7, 7), 2, 2);
     }
 
     private void moveAndCheckCollide(int x, int y) {

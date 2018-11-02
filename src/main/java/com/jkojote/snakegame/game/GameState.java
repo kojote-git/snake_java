@@ -110,7 +110,7 @@ public class GameState implements GameEventListener {
     private void updatePortal() {
         if (!hasPortal()) {
             int chance = random.nextInt();
-            if (chance % 257 != 0)
+            if (chance % 200 != 0)
                 return;
             Cell enter = null, exit = null;
             boolean collided = true;

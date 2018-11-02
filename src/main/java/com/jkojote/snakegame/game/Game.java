@@ -18,7 +18,7 @@ public class Game implements Runnable {
         this.gameState = GameStateBuilder.aGameState()
                 .withGameFieldWidth(40)
                 .withGameFieldHeight(30)
-                .withMaxPortalsCount(3)
+                .withMaxPortalsCount(10)
                 .withBorderCollisionStrategy(new TeleportBorderCollisionStrategy(40, 30))
                 .build();
         this.window = new Window("Snake",
@@ -32,13 +32,28 @@ public class Game implements Runnable {
     @Override
     public void run() {
         try {
+            double amountOfTicks = 25.0;
+            double lastTime = System.nanoTime();
+            double ns = 1000000000 / amountOfTicks;
+            double delta = 0;
+            long timer = System.currentTimeMillis();
+            int frames = 0;
             while (true) {
-                Thread.sleep(25);
+                long now = System.nanoTime();
+                delta += (now - lastTime) / ns;
+                lastTime = now;
+                while (delta >= 1) {
+                    gameState.update();
+                    delta--;
+                }
                 window.renderAllObjects(gameState.getGameObjects());
-                gameState.update();
+                frames++;
+                if (System.currentTimeMillis() - timer > 1000) {
+                    timer += 1000;
+                    System.out.println(frames);
+                    frames = 0;
+                }
             }
-        } catch (InterruptedException ie) {
-
         } catch (GameOverException | SnakeAteItselfException e) {
             window.renderAllObjects(gameState.getGameObjects());
             System.out.println("Game Over");
